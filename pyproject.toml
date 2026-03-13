@@ -1,0 +1,28 @@
+[project]
+name = "ioptron_driver"
+dynamic = ["version"]
+authors = [
+    { name="Matheus J. Castro" }
+]
+description="iOptron Driver for Python. This module uses the iOptron Mount RS-232 Command Language."
+readme = "README.md"
+requires-python = ">=3"
+classifiers=[
+ "Programming Language :: Python :: 3",
+# "License :: OSI Approved :: MIT License",
+ "Operating System :: OS Independent",
+]
+# license = {file = "LICENSE"}
+dependencies = [
+    "pyserial"
+]
+
+# [project.scripts]
+# ioptron = "ioptron_driver.gui:main"
+
+# [project.urls]
+# "homepage" = ""
+# "repository" = ""
+
+[tool.setuptools.dynamic]
+version = { attr = "ioptron_driver.__version__" }

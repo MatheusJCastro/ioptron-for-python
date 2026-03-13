@@ -1,0 +1,4 @@
+.venv
+build
+ioptron_driver.egg-info
+dist
