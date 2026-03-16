@@ -2,3 +2,5 @@
 build
 ioptron_driver.egg-info
 dist
+ioptron_for_python/__pycache__
+docs/_build

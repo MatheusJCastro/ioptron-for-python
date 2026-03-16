@@ -1,5 +1,5 @@
 [project]
-name = "ioptron_driver"
+name = "ioptron_for_python"
 dynamic = ["version"]
 authors = [
     { name="Matheus J. Castro" }
@@ -12,17 +12,17 @@ classifiers=[
 "License :: OSI Approved :: AGPLv3 License",
  "Operating System :: OS Independent",
 ]
-# license = {file = "LICENSE"}
+license = {file = "LICENSE"}
 dependencies = [
     "pyserial"
 ]
 
 # [project.scripts]
-# ioptron = "ioptron_driver.gui:main"
+# ioptron = "ioptron_for_python.gui:main"
 
-# [project.urls]
-# "homepage" = ""
-# "repository" = ""
+[project.urls]
+"homepage" = "https://ioptron-for-python.readthedocs.io/"
+"repository" = "https://github.com/MatheusJCastro/ioptron-for-python"
 
 [tool.setuptools.dynamic]
-version = { attr = "ioptron_driver.__version__" }
+version = { attr = "ioptron_for_python.__version__" }
