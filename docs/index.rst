@@ -17,7 +17,7 @@ iOptron for Python
 
 Here you can find how to install and operate the ioptron-for-python v\ |release|.
 
-**Official Disclaimer:** The developers of this code are not affiliated with, employed by, 
+**Legal Disclaimer:** The developers of this code are not affiliated with, employed by, 
 or compensated by iOptron®. This project is an independent, community-driven effort developed 
 using publicly available information.
 

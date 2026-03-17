@@ -7,7 +7,7 @@
 *Written by: Matheus J. Castro*  
 *Under AGPLv3 License*  
 
-**Official Disclaimer:** The developers of this code are not affiliated with, employed by, or compensated by iOptron®. This project is an independent, community-driven effort developed using publicly available information.
+**Legal Disclaimer:** The developers of this code are not affiliated with, employed by, or compensated by iOptron®. This project is an independent, community-driven effort developed using publicly available information.
 
 This library allows you to easily control in a full python environment iOptron® Mounts that support the iOptron® Mount RS-232 Command Language 2014, version 2.5 from January 15th, 2019.
 
