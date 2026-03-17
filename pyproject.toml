@@ -9,7 +9,7 @@ readme = "README.md"
 requires-python = ">=3"
 classifiers=[
  "Programming Language :: Python :: 3",
-"License :: OSI Approved :: AGPLv3 License",
+"License :: OSI Approved :: GNU Affero General Public License v3 (AGPLv3)",
  "Operating System :: OS Independent",
 ]
 license = {file = "LICENSE"}
