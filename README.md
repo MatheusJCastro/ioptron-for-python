@@ -1,7 +1,7 @@
 # Unofficial Python wrapper for iOptron® Mount RS-232 Command Language
 
 [![Read the Docs](https://img.shields.io/readthedocs/ioptron-for-python?logo=readthedocs)](https://ioptron-for-python.readthedocs.io/)
-[![PyPI - Version](https://img.shields.io/pypi/v/ioptron-for-python?logo=pypi)](https://pypi.org/project/ioptron-for-python/)
+[![PyPI - Version](https://img.shields.io/pypi/v/ioptron_for_python?logo=pypi)](https://pypi.org/project/ioptron_for_python/)
 [![GitHub Release](https://img.shields.io/badge/github-repo-blue?logo=github)](https://github.com/MatheusJCastro/ioptron-for-python)
 
 *Written by: Matheus J. Castro*  
