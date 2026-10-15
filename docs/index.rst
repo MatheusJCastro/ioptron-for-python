@@ -4,9 +4,9 @@ iOptron for Python
 .. image:: https://img.shields.io/readthedocs/ioptron-for-python?logo=readthedocs
    :alt: Read the Docs
    :target: https://ioptron-for-python.readthedocs.io/
-.. image:: https://img.shields.io/pypi/v/ioptron_for_python?logo=pypi
+.. image:: https://img.shields.io/pypi/v/ioptron-for-python?logo=pypi
    :alt: PyPI - Version
-   :target: https://pypi.org/project/ioptron_for_python/
+   :target: https://pypi.org/project/ioptron-for-python/
 .. image:: https://img.shields.io/badge/github-repo-blue?logo=github
    :alt: GitHub Repo
    :target: https://github.com/MatheusJCastro/ioptron-for-python

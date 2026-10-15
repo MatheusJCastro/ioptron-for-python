@@ -1,1 +1,1 @@
-from ioptron_for_python.controller import Ioptron
+from ioptron_for_python.controller import *
