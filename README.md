@@ -15,4 +15,10 @@ This code was based on the manual available [here](https://www.ioptron.com/v/ASC
 
 For an example in how to operate the driver check [Driver_Example](./examples/Driver_Example.ipynb).
 
+Mounts that support the iOptron Special Mode can be switched with
+`mount.enable_special()` and `mount.disable_special()`. Use
+`mount.is_special()` to check the current mode. Special-mode commands are
+available through `IoptronCommands` and are only supported by the mount models
+listed in the special-mode manual.
+
 Check the [docs](https://ioptron-for-python.readthedocs.io/) for the full list of commands.

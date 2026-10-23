@@ -47,6 +47,26 @@ class IoptronDevices:
         "5035": "AZ_Mount_Pro"
     }
 
+    devices_ref_special = {
+        "9035": "AZ_Mount_Pro",
+        "8035": "HAZ31",
+        "8052": "HAZ46",
+        "8033": "HAE29_AA_mode",
+        "8034": "HAE29_AA_mode",
+        "8050": "HAE43_AA_mode",
+        "8051": "HAE43_AA_mode",
+    }
+
+    _special_device_codes = {
+        "5035": ("9035",),
+        "0035": ("8035",),
+        "0052": ("8052",),
+        "0033": ("8033", "8034"),
+        "0034": ("8033", "8034"),
+        "0050": ("8050", "8051"),
+        "0051": ("8050", "8051"),
+    }
+
 
 class IoptronCommands:
     """
@@ -466,6 +486,74 @@ class IoptronCommands:
     mount_model = "MountInfo"              
     """Gets the mount model number"""
 
+    # Special mode
+    special_mode = "ZZZ"
+    """Switch between regular and special operation mode."""
+
+    primary_axis_position = "P0"
+    """Get the current primary-axis position in special mode."""
+    secondary_axis_position = "P1"
+    """Get the current secondary-axis position in special mode."""
+    axes_position = "P2"
+    """Get the current primary- and secondary-axis positions in special mode."""
+
+    primary_axis_speed = "Q0"
+    """Get the current primary-axis movement speed in special mode."""
+    secondary_axis_speed = "Q1"
+    """Get the current secondary-axis movement speed in special mode."""
+
+    @staticmethod
+    def _special_axis_value(value: str, command: str) -> str:
+        if (
+            type(value) is not str
+            or len(value) != 9
+            or value[0] not in "+-"
+            or not value[1:].isdigit()
+        ):
+            raise WrongCommand(
+                f"'{command}' requires a sign followed by 8 digits."
+            )
+        return f"{command}{value}"
+
+    @staticmethod
+    def set_primary_axis_position(value: str) -> str:
+        """Synchronize the primary axis to a position in special mode."""
+        return IoptronCommands._special_axis_value(value, "S0")
+
+    @staticmethod
+    def set_secondary_axis_position(value: str) -> str:
+        """Synchronize the secondary axis to a position in special mode."""
+        return IoptronCommands._special_axis_value(value, "S1")
+
+    @staticmethod
+    def move_primary_axis(value: str) -> str:
+        """Move the primary axis to a position at maximum speed."""
+        return IoptronCommands._special_axis_value(value, "M0")
+
+    @staticmethod
+    def move_secondary_axis(value: str) -> str:
+        """Move the secondary axis to a position at maximum speed."""
+        return IoptronCommands._special_axis_value(value, "M1")
+
+    @staticmethod
+    def move_axes(primary: str, secondary: str) -> str:
+        """Move both axes to positions at maximum speed."""
+        return (
+            "M2"
+            + IoptronCommands._special_axis_value(primary, "")
+            + IoptronCommands._special_axis_value(secondary, "")
+        )
+
+    @staticmethod
+    def slew_primary_axis(value: str) -> str:
+        """Slew the primary axis to a position at maximum speed."""
+        return IoptronCommands._special_axis_value(value, "T0")
+
+    @staticmethod
+    def slew_secondary_axis(value: str) -> str:
+        """Slew the secondary axis to a position at maximum speed."""
+        return IoptronCommands._special_axis_value(value, "T1")
+
 
 class IoptronCall:
     """
@@ -559,9 +647,9 @@ class Ioptron(IoptronDevices, IoptronCommands):
         if self.device_num is None or self.device_num == "":
             raise MountConnectionError("Device did not respond.")
         else:
-            self.device_name = self.devices_ref.get(self.device_num, "Unknown device.")
+            self.device_name = self.devices_ref.get(self.device_num, self.devices_ref_special.get(self.device_num, "Unknown device."))
 
-            if timedate:
+            if timedate and not self.is_special():
                 self.set_current_timedate()
 
             return 1
@@ -579,6 +667,77 @@ class Ioptron(IoptronDevices, IoptronCommands):
             raise MountConnectionError("Health check failed.")
         else:
             return 1
+
+    def is_special(self):
+        """
+        Return whether the mount is currently in special operation mode.
+
+        The mode is determined from the most recent ``MountInfo`` response.
+        """
+
+        return self.device_num in self.devices_ref_special
+
+    def _check_special_mount(self):
+        if self.device_num is None or self.device_num == "":
+            raise MountConnectionError("Mount is not initialized.")
+        if self.device_num not in self._special_device_codes:
+            raise WrongCommand(
+                f"Mount '{self.device_num}' does not support special mode."
+            )
+
+    def _refresh_mount_info(self, expected_codes):
+        device_num = self.send_cmd(self.mount_model)
+        if device_num not in expected_codes:
+            raise MountConnectionError(
+                "Mount did not confirm the requested operation mode."
+            )
+        self.device_num = device_num
+        self.device_name = self.devices_ref.get(
+            device_num,
+            self.devices_ref_special.get(device_num, "Unknown device."),
+        )
+
+    def enable_special(self):
+        """
+        Enable special operation mode when supported and not already enabled.
+
+        :return: 1 if the mount is in special mode after the operation.
+        """
+
+        if self.is_special():
+            return 1
+        self._check_special_mount()
+
+        special_codes = self._special_device_codes[self.device_num]
+        self.send_cmd(self.special_mode)
+        self._refresh_mount_info(special_codes)
+        return 1
+
+    def disable_special(self):
+        """
+        Disable special operation mode when enabled.
+
+        :return: 1 if the mount is in regular mode after the operation.
+        """
+
+        if self.device_num is None or self.device_num == "":
+            raise MountConnectionError("Mount is not initialized.")
+        if not self.is_special():
+            return 1
+
+        regular_codes = {
+            regular_code
+            for regular_code, special_codes in self._special_device_codes.items()
+            if self.device_num in special_codes
+        }
+        if not regular_codes:
+            raise WrongCommand(
+                f"Mount '{self.device_num}' does not support special mode."
+            )
+
+        self.send_cmd(self.special_mode)
+        self._refresh_mount_info(regular_codes)
+        return 1
 
     def close_serial(self):
         """
